@@ -1,0 +1,24 @@
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import reverse
+
+from student.forms import StudentForm
+from student.models import Student
+
+
+def index(request):
+    students = Student.objects.all()
+    if request.method == 'POST':
+        form = StudentForm(request.POST)
+        if form.is_valid():
+            #student.status=0
+            form.save()
+            return HttpResponseRedirect(reverse('index'))
+    else:
+        form = StudentForm()
+
+    context = {
+         'students':students,
+         'form':form,
+    }
+    return render(request,'index.html',context=context)
